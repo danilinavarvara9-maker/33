@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок: Как люди научились считать (полная версия)</title>
+<!-- Шрифт Nunito (fontsource CDN) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/nunito@5.0.6/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/nunito@5.0.6/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/nunito@5.0.6/900.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%;font-family:'Nunito','Arial Rounded MT Bold','Segoe UI',sans-serif}
+body{
+  background-color:#123a5c;
+  background-image:
+    radial-gradient(ellipse 50% 18% at 15% 16%, rgba(255,255,255,.20), transparent 70%),
+    radial-gradient(ellipse 40% 14% at 75% 8%, rgba(255,255,255,.16), transparent 70%),
+    radial-gradient(ellipse 34% 12% at 55% 26%, rgba(255,255,255,.12), transparent 70%),
+    linear-gradient(180deg,#2a6db4 0%,#1b4a75 35%,#123a5c 70%,#0c2c49 100%);
+  background-attachment:fixed;color:#fff;padding:0 8px 70px;overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(8,25,45,.35) 0%,rgba(8,25,45,.12) 40%,rgba(8,25,45,.45) 100%);pointer-events:none;z-index:0}
+.notebook{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:0 6px 40px}
+header{position:relative;z-index:2;text-align:center;padding:26px 12px 10px}
+header h1{display:inline-block;font-size:clamp(22px,4.4vw,46px);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#fff;
+  background:rgba(10,30,55,.74);padding:12px 36px;border-radius:70px;border:3px solid rgba(255,255,255,.4);
+  box-shadow:0 10px 26px rgba(0,0,0,.45);text-shadow:0 3px 6px rgba(0,0,0,.55)}
+.progressbar{height:16px;max-width:560px;margin:16px auto 10px;border:2px solid rgba(255,255,255,.45);border-radius:40px;background:rgba(255,255,255,.16);overflow:hidden;backdrop-filter:blur(4px)}
+.progressbar span{display:block;height:100%;width:0;background:linear-gradient(180deg,#8ac926,#2e9e4f);transition:width .5s}
+.progresstext{margin:0 auto 18px;display:table;font-size:20px;font-weight:900;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.45);padding:6px 24px;border-radius:40px;backdrop-filter:blur(4px)}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
+.tab{font-family:inherit;font-weight:900;font-size:16px;padding:10px 13px;border-radius:16px;cursor:pointer;color:#fff;
+  border:3px solid rgba(255,255,255,.55);background:linear-gradient(165deg,#bfe7fb 0%,#7cc0ea 45%,#3f83c4 100%);
+  box-shadow:0 10px 18px rgba(0,0,0,.4), inset 0 3px 6px rgba(255,255,255,.7), inset 0 -7px 12px rgba(0,40,80,.35);
+  text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .15s ease}
+.tab:hover{transform:translateY(-4px)}
+.tab.active{background:linear-gradient(180deg,#ffe066,#ffb703);color:#23411c;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.tab.done{background:linear-gradient(160deg,#b8f0c0 0%,#63c97a 50%,#2e9e4f 100%)}
+.tab .ok{font-weight:900}
+.task{display:none}
+.task.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.card{position:relative;margin-bottom:32px;padding:38px 40px 32px 84px;border-radius:8px;color:#1c3557;font-weight:700;
+  background-color:#fbfaf2;
+  background-image:linear-gradient(rgba(93,140,196,.28) 1px, transparent 1px),linear-gradient(90deg, rgba(93,140,196,.28) 1px, transparent 1px);
+  background-size:28px 28px;
+  box-shadow:0 26px 55px rgba(0,0,0,.55), inset 0 0 70px rgba(160,150,110,.16), inset 3px 3px 16px rgba(120,110,80,.12);
+  transform:rotate(-.5deg)}
+.card::before{content:'';position:absolute;top:0;bottom:0;left:60px;width:3px;background:rgba(216,62,62,.65);pointer-events:none}
+.card::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:8px;
+  background:linear-gradient(115deg,transparent 60%,rgba(0,0,0,.045) 61%,transparent 63%),linear-gradient(245deg,transparent 78%,rgba(0,0,0,.04) 79%,transparent 82%)}
+.badge{display:inline-block;background:#14355e;color:#ffd23f;font-weight:900;font-size:15px;padding:6px 16px;border-radius:30px;letter-spacing:.8px;text-transform:uppercase;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.task-title{font-size:clamp(24px,3.8vw,34px);font-weight:900;color:#14355e;margin:12px 0 12px;line-height:1.15;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+.story{background:rgba(255,255,255,.78);border:3px solid rgba(74,118,181,.45);border-radius:14px;padding:14px 16px;margin-bottom:14px;
+  font-size:clamp(16px,2.4vw,19px);font-weight:700;color:#16304f;line-height:1.55}
+.story b{color:#1a3f8f}
+.story .em{color:#a02428;font-weight:900}
+.story2{background:rgba(255,248,221,.85);border:3px dashed rgba(176,121,8,.55);border-radius:14px;padding:12px 16px;margin-bottom:14px;
+  font-size:clamp(15px,2.3vw,18px);font-weight:700;color:#4a3200;line-height:1.55}
+.facts{background:rgba(232,243,255,.88);border:3px dashed rgba(21,101,192,.5);border-radius:14px;padding:12px 16px;margin-bottom:16px;
+  font-size:clamp(15px,2.3vw,18px);font-weight:700;color:#14355e;line-height:1.55}
+.facts .fh{font-weight:900;color:#0d3f7d;display:block;margin-bottom:6px}
+.facts ul{padding-left:22px;margin:0}
+.facts li{margin-bottom:6px}
+.facts b{color:#0d3f7d}
+.task-text{font-size:clamp(17px,2.6vw,21px);margin:0 0 12px;line-height:1.5;color:#16304f;font-weight:800}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:20px}
+.btn{font-family:inherit;font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:1px;border:none;border-radius:50px;padding:13px 28px;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#42a5f5,#1565c0);box-shadow:0 7px 0 #0d3f7d, 0 12px 18px rgba(0,0,0,.3);transition:transform .12s, box-shadow .12s}
+.btn:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 0 #0d3f7d, 0 16px 22px rgba(0,0,0,.35)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 3px 0 #0d3f7d}
+.btn.green{background:linear-gradient(180deg,#66d97f,#2e9e4f);box-shadow:0 7px 0 #1d6b34, 0 12px 18px rgba(0,0,0,.3)}
+.btn.gray{background:linear-gradient(180deg,#ffffff,#d3e2f0);color:#14355e;box-shadow:0 7px 0 #9db4d1, 0 12px 18px rgba(0,0,0,.25)}
+.btn.pink{background:linear-gradient(180deg,#ffe066,#ffb703);color:#23411c;box-shadow:0 7px 0 #b07908, 0 12px 18px rgba(0,0,0,.3)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.pulse{animation:pulseGlow 1.4s infinite}
+@keyframes pulseGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
+.conclusion{display:none;margin-top:22px;padding:16px 20px 16px 84px;border-radius:18px;font-weight:900;position:relative;min-height:70px;line-height:1.45;
+  background:#e2f7e6;border:4px solid #2e9e4f;color:#1d6b34}
+.conclusion.show{display:block;animation:fadeIn .3s ease}
+.conclusion::before{content:'';position:absolute;left:28px;top:22px;width:18px;height:34px;border:solid #2e9e4f;border-width:0 8px 8px 0;transform:rotate(45deg)}
+.conc-text{font-size:clamp(17px,2.5vw,21px);font-weight:800;margin:0}
+.conc-text b{color:#166a34;font-weight:900}
+.line{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0;font-size:clamp(16px,2.4vw,20px);font-weight:800;color:#16304f}
+.ans-in{font-family:inherit;font-size:22px;font-weight:900;color:#1a3f8f;background:rgba(255,255,255,.8);border:none;
+  border-bottom:4px solid #4a76b5;border-radius:8px 8px 0 0;padding:6px 12px;width:130px;text-align:center;outline:none;transition:border-color .2s, background .2s}
+.ans-in:focus{border-bottom-color:#ffb703;background:#fffdf3}
+.ans-in:disabled{opacity:.8}
+.row-ok .ans-in{border-bottom-color:#2e9e4f;background:#eafbee}
+.row-bad .ans-in{border-bottom-color:#e5484d;background:#ffe9ea;animation:headShake .4s}
+@keyframes headShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.shake{animation:headShake .45s}
+.flock{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px;border:3px dashed rgba(74,118,181,.55);border-radius:16px;background:rgba(255,255,255,.55);margin:12px 0}
+.sheep{font-family:inherit;font-size:42px;line-height:1;background:none;border:3px solid transparent;border-radius:16px;cursor:pointer;padding:6px 8px;transition:transform .12s;position:relative}
+.sheep:hover{transform:translateY(-4px) rotate(-3deg)}
+.sheep.counted{border-color:#2e9e4f;background:#eafbee}
+.sheep.counted::after{content:'✔';position:absolute;top:-8px;right:-6px;font-size:18px;font-weight:900;color:#fff;background:#2e9e4f;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.notches{display:flex;flex-wrap:wrap;gap:7px;align-items:center;min-height:56px;padding:10px 14px;border:3px solid rgba(138,90,43,.5);border-radius:14px;background:rgba(255,244,214,.7)}
+.notch{width:9px;height:36px;background:#8a5a2b;border-radius:3px;transform:rotate(7deg);box-shadow:0 2px 3px rgba(0,0,0,.25);animation:pop .3s}
+@keyframes pop{0%{transform:scale(.3) rotate(7deg)}70%{transform:scale(1.2) rotate(7deg)}100%{transform:scale(1) rotate(7deg)}}
+.notches .nh{font-weight:900;color:#7a6a3a;font-size:16px}
+.buildrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+.buildrow .tgt{font-size:22px;font-weight:900;color:#14355e;min-width:80px}
+.build{display:flex;gap:6px;flex-wrap:wrap;min-height:52px;min-width:220px;flex:1;padding:6px 10px;border:3px dashed rgba(74,118,181,.6);border-radius:14px;background:rgba(255,255,255,.55);align-items:center}
+.build.locked{border-style:solid;border-color:#2e9e4f;background:#eafbee}
+.bchip{font-weight:900;font-size:17px;color:#4a3200;background:linear-gradient(180deg,#ffe066,#ffb703);border:2px solid #b07908;border-radius:10px;padding:5px 10px;animation:pop2 .3s}
+.bchip.g{font-size:24px}
+@keyframes pop2{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{font-family:inherit;font-size:19px;font-weight:900;padding:10px 16px;border-radius:12px;border:3px solid #4a76b5;cursor:pointer;color:#14355e;
+  background:linear-gradient(180deg,#ffffff,#dfe9f5);box-shadow:0 4px 0 #9db4d1;transition:transform .1s, background .15s}
+.chip:hover{background:linear-gradient(180deg,#fff8dd,#ffe9a8);transform:translateY(-2px)}
+.chip:active{transform:translateY(1px);box-shadow:0 1px 0 #9db4d1}
+.chip:disabled{opacity:.4;cursor:default}
+.chip.g{font-size:26px}
+.papers{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;padding:14px;border:3px dashed rgba(74,118,181,.55);border-radius:16px;background:rgba(255,255,255,.55);margin:12px 0}
+.ppc{font-family:inherit;font-size:34px;line-height:1;background:none;border:3px solid transparent;border-radius:14px;cursor:pointer;padding:5px 7px;transition:transform .12s;position:relative}
+.ppc:hover{transform:translateY(-3px) rotate(3deg)}
+.ppc.counted{border-color:#2e9e4f;background:#eafbee;opacity:.75}
+.ppc.counted::after{content:'✔';position:absolute;top:-8px;right:-6px;font-size:16px;font-weight:900;color:#fff;background:#2e9e4f;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.hands{display:flex;gap:16px;justify-content:center;align-items:flex-end;padding:14px;border:3px solid rgba(138,90,43,.45);border-radius:16px;background:rgba(255,244,214,.7);margin:12px 0;flex-wrap:wrap}
+.hand{display:flex;gap:5px;align-items:flex-end;padding:8px 10px;border:3px solid rgba(138,90,43,.5);border-radius:14px;background:#fff}
+.fing{width:16px;height:46px;border-radius:9px;background:#ffd9ae;border:2px solid #8a5a2b;transition:.2s}
+.fing.bent{height:20px;background:#c9a27a;transform:translateY(6px)}
+.handlbl{font-size:14px;font-weight:900;color:#7a6a3a;text-align:center;margin-top:6px}
+.tally{font-size:clamp(17px,2.5vw,21px);font-weight:900;color:#14355e;text-align:center;margin:8px 0}
+.jwrap{display:flex;gap:18px;justify-content:center;align-items:flex-end;padding:14px;border:3px solid rgba(138,90,43,.45);border-radius:16px;background:rgba(255,244,214,.7);margin:12px 0;flex-wrap:wrap}
+.jhand{display:flex;gap:8px;align-items:flex-end}
+.jfing{display:flex;flex-direction:column;gap:5px}
+.joint{width:30px;height:22px;border:2px solid #8a5a2b;border-radius:7px;background:#ffd9ae;cursor:pointer;transition:.12s}
+.joint:hover{background:#fff3d6}
+.joint.on{background:linear-gradient(180deg,#ffd23f,#ffb703);border-color:#b07908;box-shadow:0 0 10px rgba(255,183,3,.6)}
+.thumbj{width:30px;height:56px;border:2px solid #8a5a2b;border-radius:10px;background:#f3e2c3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#8a5a2b;text-align:center}
+.jcap{font-size:15px;font-weight:900;color:#7a6a3a;text-align:center}
+.qblock{border:3px solid rgba(74,118,181,.5);border-radius:16px;background:rgba(255,255,255,.72);padding:12px 14px;margin:12px 0}
+.qtitle{font-size:clamp(16px,2.4vw,19px);font-weight:900;color:#14355e;margin-bottom:10px}
+.qopts{display:flex;gap:10px;flex-wrap:wrap}
+.qopt{font-family:inherit;font-size:17px;font-weight:800;color:#1a3f8f;background:rgba(255,255,255,.92);border:3px solid #4a76b5;border-radius:12px;padding:9px 14px;cursor:pointer;transition:.12s}
+.qopt:hover{transform:translateY(-2px);background:#fff8dd}
+.qopt.correct{border-color:#2e9e4f;background:#eafbee;cursor:default}
+.qopt.wrong{border-color:#e5484d;background:#ffe9ea;animation:headShake .4s}
+.qblock.solved{border-color:#2e9e4f;background:#eafbee}
+.qopts.sym .qopt{font-size:26px;font-weight:900;width:58px;text-align:center;padding:8px 0}
+.eglegend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+.egitem{text-align:center;font-weight:900;color:#14355e;background:rgba(255,255,255,.78);border:2px solid rgba(93,140,196,.45);border-radius:12px;padding:8px 12px;font-size:14px}
+.egitem .g{font-size:30px;display:block;line-height:1.2}
+.egshow{font-size:30px;letter-spacing:7px;text-align:center;background:rgba(255,244,214,.85);border:3px solid rgba(138,90,43,.5);border-radius:14px;padding:12px;margin:12px 0;color:#4a3200}
+.final{border:5px solid #ffd23f;border-radius:28px;background:linear-gradient(165deg,#1e4a78,#0e2a4a);padding:26px 22px;text-align:center;
+  box-shadow:0 20px 45px rgba(0,0,0,.5), inset 0 2px 10px rgba(255,255,255,.18);margin-top:8px}
+.final h3{font-size:clamp(24px,4vw,34px);font-weight:900;margin:10px 0;color:#ffd23f;text-transform:uppercase;letter-spacing:1.5px;text-shadow:0 3px 8px rgba(0,0,0,.6)}
+.final p{color:#cfe3f7}
+.nav-bottom{display:flex;justify-content:space-between;gap:12px;margin-top:6px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(220%);background:rgba(9,26,48,.95);color:#fff;padding:14px 26px;border-radius:50px;
+  font-weight:800;font-size:18px;max-width:min(700px,92vw);z-index:10000;transition:transform .3s;border:3px solid #ffd23f;box-shadow:0 10px 24px rgba(0,0,0,.5);text-align:center;backdrop-filter:blur(6px)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.err{border-color:#e5484d}#toast.ok{border-color:#66d97f}
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:9998;overflow:hidden}
+.confetti-wrap i{position:absolute;top:-30px;display:block;opacity:.95;animation-name:confettiFall;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes confettiFall{0%{transform:translateY(-5vh) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(1080deg);opacity:.7}}
+@media (max-width:640px){
+  .card{padding:30px 16px 24px 52px}
+  .card::before{left:38px}
+  .ans-in{width:100px;font-size:19px}
+  .btn{font-size:15px;padding:11px 20px}
+  .conclusion{padding:14px 16px 14px 60px}
+  .conclusion::before{left:18px;top:18px}
+  .sheep{font-size:34px}.ppc{font-size:28px}
+  .tab{font-size:14px;padding:8px 9px}
+  .egshow{font-size:22px;letter-spacing:4px}
+}
+</style>
+</head>
+<body>
+<div class="notebook">
+  <header><h1>Как люди научились считать</h1></header>
+  <div class="progressbar"><span id="pbar"></span></div>
+  <div class="progresstext" id="ptext">⭐ Получено звёзд: 0 из 10</div>
+  <div class="tabs" id="tabs"></div>
+
+  <!-- 1 ПАСТУХ -->
+  <section class="task active" id="u1">
+    <div class="card">
+      <span class="badge">📜 Стр. 1</span>
+      <h2 class="task-title">Арифметика каменного века</h2>
+      <div class="story">Числа и действия с ними были придуманы не каким-то одним человеком. Ещё в самые отдалённые времена людям понадобились арифметические знания, чтобы определять, <b>когда надо засевать поля</b>, <b>начинать полив</b>, <b>когда ждать потомства у животных</b>. Надо было знать, <b>сколько овец в стаде</b>, <b>сколько мешков зерна положено в амбары</b>. Но считать первобытные люди не умели — и пастухи стали использовать различные предметы: <span class="em">по одному на каждую овцу</span>. Чтобы узнать, не пропала ли за день хоть одна овца, пастух откладывал в сторону по одному предмету каждый раз, когда животное проходило в загон. И только убедившись, что вернулось столько же овец, сколько было предметов, он спокойно шёл спать.</div>
+      <div class="story2">💡 Но в стаде были не только овцы — пасли и коров, и коз, и ослов. Поэтому появились и другие «счёты»: <b>зарубки</b> на дереве и кости, <b>узелки</b> на верёвках, <b>рисунки</b> на мягкой глине. А земледельцы вели учёт собранного урожая с помощью глиняных фигурок: камушек — мешок зерна, фигурка — кувшин масла, кусочек — полотно.</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Объединяя группы предметов и находя их части, люди решали простейшие задачи на <b>сложение и вычитание</b> — готовились к освоению счёта и действий с числами.</li>
+          <li>Главный принцип счёта — <b>взаимно-однозначное соответствие</b>: каждой овце — своя зарубка, каждой зарубке — своя овца. На этом принципе держится вся арифметика!</li>
+          <li>Такие знаки-предметы нельзя было перекладывать с места на место, убирать и добавлять по желанию — зато ошибку было видно сразу: осталась лишняя зарубка — значит, овца не вернулась.</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Помоги пастуху:</b> нажимай на овец — каждая оставляет зарубку. Сколько зарубок получилось?</p>
+      <div class="flock" id="u1-flock"></div>
+      <div class="notches" id="u1-notches"><span class="nh">Здесь появятся зарубки…</span></div>
+      <div class="line" id="u1-row"><span>Зарубок получилось:</span><input class="ans-in" id="u1-in" inputmode="numeric"></div>
+      <p class="task-text">🎮 <b>Часть 2. Задача пастуха:</b> утром пастух отложил <b>12 зарубок</b> (столько овец ушло в поле). Вечером <b>5 зарубок остались без пары</b> — овцы ещё не вернулись. Сколько овец уже вернулось в загон?</p>
+      <div class="line" id="u1-row2"><span>Вернулось овец:</span><input class="ans-in" id="u1-in2" inputmode="numeric"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU1()">Проверить</button>
+        <button class="btn pink" id="u1-verdict" onclick="showVerdict('u1')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU1()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u1-conc"><p class="conc-text">Зарубок столько же, сколько овец: <b>7</b>. Вернулось 12 − 5 = <b>7 овец</b>. Считали <b>по одному предмету на каждый другой</b> — зарубки, узелки, камушки, глиняные фигурки. Так родилось счётное дело!</p></div>
+    </div>
+    <div class="nav-bottom"><span></span><button class="btn" onclick="showTask('u2')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 2 ИМЕНА ЧИСЕЛ -->
+  <section class="task" id="u2">
+    <div class="card">
+      <span class="badge">📜 Стр. 2</span>
+      <h2 class="task-title">Числа получают имена</h2>
+      <div class="story">Перекладывать камушки и глиняные фигурки с места на место было довольно утомительным занятием. Но прошло много тысячелетий, прежде чем люди научились <b>пересчитывать</b> предметы. Для этого им пришлось придумать <b>названия для чисел</b>. О том, как появлялись имена у чисел, учёные узнают, изучая языки различных племён и народов. Сначала названия получили только числа <span class="em">1 и 2</span>: «один» связывали обычно со словом <b>«солнце»</b>, а «два» — с предметами, встречающимися <b>парно</b>: крыльями, ушами и т. д. Бывало, что числам 1 и 2 давали иные имена: связывали с местоимениями «я» и «ты».</div>
+      <div class="story2">💡 У некоторых племён ещё совсем недавно не было других числительных, кроме «один» и «два». А всё, что шло после двух, называлось <span class="em">«много»</span>. Но понадобилось называть и другие числа — и придумали замечательный выход: числа стали называть, <b>повторяя несколько раз названия для единиц и двоек</b>. У папуасов Новой Гвинеи: 1 — <b>«урапун»</b>, 2 — <b>«окоза»</b>, 3 — <b>«окоза-урапун»</b>, 4 — <b>«окоза-окоза»</b>, 6 — <b>«окоза-окоза-окоза»</b>. А дальше у них идёт уже знакомое нам название «много»: и 10 у них «много», и 100 тоже «много».</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>У нивхов, живущих на Сахалине, числительные зависят от <b>формы предмета</b>: «два глаза» и «два камня» звучат по-разному. Одному и тому же числу «два» у них соответствует несколько десятков различных слов!</li>
+          <li>В одних языках 1 — это <b>«я»</b>, а 2 — <b>«ты»</b>; в других «один» звучало как <b>«мужчина»</b>, а «два» — как <b>«женщина»</b>.</li>
+          <li>Имена чисел появились <b>позже действий</b>: люди научились складывать и делить раньше, чем дали числам названия. И должно было пройти много столетий, прежде чем одни и те же числительные стали применять к предметам <b>любого вида</b> — появились общие названия для чисел.</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Собери имена чисел</b> из слов «урапун» и «окоза» — сначала известные (3, 4, 6), а потом догадайся, как выглядели бы <b>7, 8 и 9</b>!</p>
+      <div id="u2-rows"></div>
+      <div class="controls">
+        <button class="btn pink" id="u2-verdict" onclick="showVerdict('u2')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU2()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u2-conc"><p class="conc-text">3 = <b>окоза-урапун</b>, 4 = <b>окоза-окоза</b>, 6 = <b>окоза-окоза-окоза</b>; по правилу: 7 = <b>окоза-окоза-окоза-урапун</b>, 8 = <b>окоза-окоза-окоза-окоза</b>, 9 = <b>окоза-окоза-окоза-окоза-урапун</b>. Но папуасы на 6 останавливались: дальше — «много»!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u1')">◀ Назад</button><button class="btn" onclick="showTask('u3')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 3 ТРИ И СЕМЬ -->
+  <section class="task" id="u3">
+    <div class="card">
+      <span class="badge">📜 Стр. 3</span>
+      <h2 class="task-title">Священные 3 и 7, и граница «много»</h2>
+      <div class="story">Позднее другие племена дали особое имя числительному, которое мы называем <span class="em">«три»</span>. А так как до того они считали «один, два, много», то это новое числительное стали применять вместо слова «много». И сейчас мать, рассердившись на сына, говорит ему: «Что, я <b>три раза</b> должна повторять одно и то же!» Русская пословица говорит: «<b>Обещанного три года ждут</b>». А в сказках злой царь посылает героя искать Кощея Бессмертного «за <b>тридевять</b> земель, в <b>тридесятом</b> царстве». Иногда числом 3 обозначали окружающий человека мир — его делили на <b>земное, подземное и небесное царства</b>. Поэтому число 3 стало у многих народов <b>священным</b>: когда придумывали легенды о богах, то выделяли из них трёх самых главных.</div>
+      <div class="story2">💡 В русских сказках число 3 также играло особую роль: три брата, герой сражается с <b>трёхглавым змеем</b>, проходит три царства — медное, серебряное и золотое. Число 4 встречается в сказках куда реже. Но о том, что и оно на каком-то этапе развития играло особую роль, можно судить по русской грамматике: «одна лошадь», «две лошади», «три лошади», «четыре лошади» — а начиная с пяти: «пять лошадей», «шесть лошадей»… Значит, когда-то за числом 4 в русском языке начиналась необозримая область «много». На более поздних этапах в роли слова «много» выступало число <span class="em">7</span>: «Семеро одного не ждут», «Семь раз отмерь — один отрежь», «Один с сошкой — семеро с ложкой», «Семь бед — один ответ», «Лук от семи недуг». Первые названия чисел некоторые племена стали применять 20–25 тысяч лет тому назад, а слово для обозначения числа <b>1000</b> возникло лишь <b>5–7 тысяч лет назад</b>.</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>«Тридевять» — это 3 × 9 = <b>27</b>, а «тридесять» — 3 × 10 = <b>30</b>: сказочные числа тоже считались через священную тройку!</li>
+          <li>След числа 7 живёт и в нашей жизни: <b>7 дней недели</b>, «седьмое небо», «на седьмом небе от счастья».</li>
+          <li>Граница «много» у разных народов проходила по-разному: у папуасов после 6, у русских — после 4, а след «двадцатеричного много» остался во французском «восемьдесят» = «четыре раза по двадцать».</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Вставь пропущенные числа</b> в пословицы и сказки.</p>
+      <div class="line" data-row="u3-0"><span>«Семь раз отмерь —</span><input class="ans-in" inputmode="numeric"><span>раз отрежь»</span></div>
+      <div class="line" data-row="u3-1"><span>«</span><input class="ans-in" inputmode="numeric"><span>еро одного не ждут»</span></div>
+      <div class="line" data-row="u3-2"><span>«Один с сошкой —</span><input class="ans-in" inputmode="numeric"><span>с ложкой»</span></div>
+      <div class="line" data-row="u3-3"><span>«За</span><input class="ans-in" inputmode="numeric"><span>земель, в</span><input class="ans-in" inputmode="numeric"><span>царство»</span></div>
+      <div class="line" data-row="u3-4"><span>«Герой сражается с</span><input class="ans-in" inputmode="numeric"><span>главым змеем»</span></div>
+      <p class="task-text" style="margin-top:16px">🎮 <b>Часть 2. Граница «много»:</b> выбери правильную форму слова «лошадь» — почувствуй, где у древних людей кончался счёт и начиналось «много»!</p>
+      <div id="u3-gram"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU3()">Проверить пословицы</button>
+        <button class="btn pink" id="u3-verdict" onclick="showVerdict('u3')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU3()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u3-conc"><p class="conc-text">Священное число — <b>3</b> (три царства, три брата, «тридевять» = 27), а роль «много» играло <b>7</b>. Граница «много» в русском языке прошла после четырёх: одна/две/три/четыре <b>лошади</b>, но пять <b>лошадей</b>!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u2')">◀ Назад</button><button class="btn" onclick="showTask('u4')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 4 ПАЛЬЦЫ -->
+  <section class="task" id="u4">
+    <div class="card">
+      <span class="badge">📜 Стр. 4</span>
+      <h2 class="task-title">Живая счётная машина</h2>
+      <div class="story">Пальцы оказались прекрасной вычислительной машиной. С их помощью можно было сосчитать до <span class="em">5</span>, а если взять две руки, то и до <span class="em">10</span>. Затем люди сделали следующий шаг вперёд и научились считать <b>десятками</b>. Когда людям приходилось считать очень большие совокупности предметов, к счёту привлекалось больше участников: <b>один считал единицы, второй — десятки, а третий — сотни</b>, то есть десятки десятков. Второй загибал один палец лишь после того, как у первого оказывались загнутыми все пальцы обеих рук. Такой счёт единицами, затем десятками, затем десятками десятков лёг в основу системы счисления, принятой почти у всех народов мира, — <span class="em">десятичной</span>.</div>
+      <div class="story2">💡 Правда, для этого пришлось припугнуть сразу двух счётчиков! Знаменитый русский исследователь Новой Гвинеи <b>Миклухо-Маклай</b> должен был однажды объяснить папуасам, через сколько дней вернётся к ним корабль «Витязь». Для этого он нарезал кусочки бумаги, и папуасы были их сосчитать: первый, раскладывая кусочки на колене, при каждом повторял «наре, наре» (один, один); второй загибал при этом палец: сначала на одной, затем на другой руке. Насчитав до 10 и согнув пальцы обеих рук, он опускал их на колени и проговаривал: <span class="em">«две руки»</span>, причём третий палец загинул один папуас. На втором десятке было сделано то же, причём третий палец загнули второй палец; то же самое было сделано и для третьего десятка; оставшиеся бумажки не составляли четвёртого десятка и были оставлены в стороне. Итак, чтобы сосчитать всего лишь до 30, пришлось работать <b>трём папуасам</b>!</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Сначала числа произносили целиком: «<b>пять пальцев третьего человека, восемь пальцев второго и шесть пальцев первого</b>». Сколько времени надо произносить! Поэтому стали говорить короче: вместо «пальцев второго человека» появилось слово <b>«десять»</b>, а вместо «пальцев третьего человека» — <b>«сто»</b>. Вот и получилось: «пятьсот восемьдесят шесть»!</li>
+          <li>Пальцы тесно связаны со счётом и в словах: по-древнегречески «считать» выражалось словом <b>«пятёрить»</b>; в русском «пять» напоминает <b>«пясть»</b> — часть кисти руки; а в Англии первые 10 чисел называют общим именем — <b>«пальцы» (fingers)</b>.</li>
+          <li>Десятичная система победила потому, что у человека на каждой руке по 5 пальцев. Было бы их по шесть — считали бы дюжинами; были бы копыта, как у лошадей, — считали бы парами, как папуасы.</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Посчитай, как папуасы:</b> нажимай на кусочки бумаги — пальцы загибаются. Собери все 12.</p>
+      <div class="papers" id="u4-papers"></div>
+      <div class="hands" id="u4-hands"></div>
+      <div class="tally" id="u4-tally">Посчитано: 0</div>
+      <div id="u4-q10"></div>
+      <p class="task-text">🎮 <b>Часть 2. Ответь на вопросы:</b></p>
+      <div class="line" data-row="u4-0"><span>На одной руке можно сосчитать до</span><input class="ans-in" inputmode="numeric"></div>
+      <div class="line" data-row="u4-1"><span>На двух руках — до</span><input class="ans-in" inputmode="numeric"></div>
+      <div class="line" data-row="u4-2"><span>Папуас согнул «две руки» и ещё 3 пальца второго десятка. Какое число получилось?</span><input class="ans-in" inputmode="numeric"></div>
+      <div class="line" data-row="u4-3"><span>Чтобы сосчитать до 30, понадобилось папуасов:</span><input class="ans-in" inputmode="numeric"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU4()">Проверить</button>
+        <button class="btn pink" id="u4-verdict" onclick="showVerdict('u4')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU4()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u4-conc"><p class="conc-text">Пальцы — первая счётная машина: <b>5</b> и <b>10</b>. 12 кусочков — «две руки» и ещё 2 пальца; 10 папуасы назвали бы <b>«две руки»</b>; «две руки» и 3 пальца = <b>13</b>; до 30 считали <b>три папуаса</b> (единицы, десятки, сотни). Так родилась десятичная система!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u3')">◀ Назад</button><button class="btn" onclick="showTask('u5')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 5 ДЕЙСТВИЯ -->
+  <section class="task" id="u5">
+    <div class="card">
+      <span class="badge">➕ Стр. 5</span>
+      <h2 class="task-title">Как родились четыре действия</h2>
+      <div class="story">С операциями сложения и вычитания люди имели дело задолго до того, как числа получили имена. Когда несколько групп рыбаков и сборщиков кореньев <b>складывали в одно место свою добычу</b>, они, по сути, объединяли непересекающиеся множества. А когда из собранных орехов часть шла в пищу, люди находили оставшуюся часть множества — запас орехов уменьшался. Таким образом, создавалась основа <b>сложения и вычитания</b> чисел. С операцией <b>умножения</b> люди познакомились, когда стали сеять хлеб и увидели, что собранный урожай в несколько раз больше, чем количество посеянных семян. Говорили: собрали урожай «<b>сам-двадцать</b>» (в двадцать раз больше, чем посеяли), «сам-сорок» и т. д. Наконец, когда добытое на охоте мясо делили <b>поровну</b> между всеми членами племени, выполняли операцию <b>деления</b>.</div>
+      <div class="story2">💡 Сами названия этих операций показывают, с какими действиями над предметами они связаны. Но должны были пройти тысячелетия, пока люди осознали, что, выполняя действия с группами предметов, они повторяют одни и те же операции. Они поняли, что каждый раз, когда кладут рядом два ореха и два ореха, получается 4 ореха, и что это верно и при сложении двух пальцев с двумя пальцами, и двух рыб с двумя рыбами. Так люди узнали, что <span class="em">«два плюс два равно четырём»</span> — всегда и для всего!</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Постепенно, накапливая такие знания, люди обучались выполнять действия над всё большими и большими числами.</li>
+          <li>Таким путём возникло <b>учение о числах</b> — арифметика, необходимая для решения самых разнообразных практических задач: от раздела мяса до постройки храма.</li>
+          <li>Слово «сам-двадцать» жило в русском языке очень долго: им описывали урожай, приплод и даже ткань («полотно сам-двадцать» — в 20 раз больше пряжи).</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Угадай действие:</b> нажми на знак, который родился из ситуации.</p>
+      <div id="u5-set"></div>
+      <p class="task-text">🎮 <b>Часть 2. Реши, как древний счетовод:</b> выбери действие и запиши ответ.</p>
+      <div class="qblock" id="u5-p0">
+        <div class="qtitle">Две группы сборщиков принесли 7 и 6 кореньев и ссыпали их в одну кучу. Выбери действие и запиши, сколько кореньев в куче.</div>
+        <div class="qopts sym" id="u5-op0"></div>
+        <div class="line" style="margin:10px 0 0"><span>Ответ:</span><input class="ans-in" id="u5-a0" inputmode="numeric"></div>
+      </div>
+      <div class="qblock" id="u5-p1">
+        <div class="qtitle">Посеяли 8 зёрен, а собрали урожай «сам-пять» (в 5 раз больше). Выбери действие и запиши, сколько зёрен собрали.</div>
+        <div class="qopts sym" id="u5-op1"></div>
+        <div class="line" style="margin:10px 0 0"><span>Ответ:</span><input class="ans-in" id="u5-a1" inputmode="numeric"></div>
+      </div>
+      <div class="controls">
+        <button class="btn" onclick="checkU5()">Проверить задачи</button>
+        <button class="btn pink" id="u5-verdict" onclick="showVerdict('u5')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU5()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u5-conc"><p class="conc-text">Сложение — объединение множеств, вычитание — удаление части, умножение — «во сколько раз больше» («сам-пять»!), деление — поровну. Задачи: 7 + 6 = <b>13</b> кореньев; 8 · 5 = <b>40</b> зёрен.</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u4')">◀ Назад</button><button class="btn" onclick="showTask('u6')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 6 СИСТЕМЫ -->
+  <section class="task" id="u6">
+    <div class="card">
+      <span class="badge">🖐️ Стр. 6</span>
+      <h2 class="task-title">Пятки, дюжины и компьютеры</h2>
+      <div class="story">Сейчас десятичная система применяется почти повсеместно. Но и теперь есть ещё племена, которые пользуются при счёте пальцами одной руки — у них система оказалась <span class="em">пятеричной</span>. В странах, где люди ходили босиком, по пальцам легко было считать до 20 — поэтому большое распространение получила <span class="em">двадцатеричная</span> система. Следы этого сохранились, например, во французском языке, где слово «восемьдесят» звучит как «<b>четыре раза по двадцать</b>». Самым серьёзным соперником десятичной системы оказалась <span class="em">двенадцатеричная</span>: вместо десятков применяли <b>дюжины</b> — группы из 12 предметов. Во многих странах даже теперь некоторые товары — ножи, ложки, вилки — продают дюжинами, а в чайный сервиз входит по 12 чашек и 12 блюдец. В торговле применяли и <b>большую дюжину — гросс</b>: пересчитав предметы, можно было сказать «пять гроссов, восемь дюжин и ещё шесть предметов» — в нашей системе это 144·5 + 12·8 + 6 = <b>822</b>.</div>
+      <div class="story2">💡 Откуда же взялся интерес к дюжине? В древних памятниках письменности число 12 встречается часто и всегда в особой роли: у пророка оказывается ровно <b>12 последователей</b>, герой должен совершить как раз <b>12 подвигов</b>, год разделён на <b>12 месяцев</b>, и даже Гулливер в книге Свифта в 12 раз выше, чем лилипуты, и в 12 раз ниже, чем великаны. Ответить на вопрос помогла учёным глиняная табличка с самым древним <b>шумерским счётом</b>: оказывается, шумеры считали не по пальцам, а по <b>суставам пальцев</b> — а на каждом пальце руки, кроме большого, по 3 сустава: всего <span class="em">12</span>! Несколько раз предпринималась попытка ввести двенадцатеричную систему везде, но дальше разговоров дело не пошло: непосильной оказалась задача переучить всех на новые обозначения.</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Победа десятичной системы объясняется тем, что у человека на каждой руке по 5 пальцев. Было бы их по шесть — считали бы мы не десятками, а <b>дюжинами</b>; были бы копыта — считали бы <b>парами</b>.</li>
+          <li>Но странно повернулась история! Именно <b>двоичная</b> система счисления оказалась самой полезной для современной техники: на её основе работают современные <b>компьютеры</b>.</li>
+          <li>Дюжинами и гроссами удобно торговать: 12 делится и на 2, и на 3, и на 4, и на 6 — а 10 только на 2 и 5. Поэтому дюжина так долго не сдавалась!</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Посчитай, как шумер:</b> нажимай на суставы пальцев (кроме большого) и сосчитай дюжину!</p>
+      <div class="jwrap" id="u6-joints"></div>
+      <div class="tally" id="u6-jtally">Суставов посчитано: 0 из 12</div>
+      <p class="task-text">🎮 <b>Часть 2. Выбери основу</b> каждой системы счисления.</p>
+      <div id="u6-set"></div>
+      <div class="line" id="u6-doz"><span>🎁 Гросс (большая дюжина) — это сколько дюжин?</span><input class="ans-in" id="u6-in2" inputmode="numeric"></div>
+      <div class="line" id="u6-gross"><span>🎁 Пересчитай: 5 гроссов, 8 дюжин и ещё 6 предметов =</span><input class="ans-in" id="u6-in" inputmode="numeric"><span>предметов</span></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU6()">Проверить</button>
+        <button class="btn pink" id="u6-verdict" onclick="showVerdict('u6')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU6()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u6-conc"><p class="conc-text">Шумеры считали по <b>12 суставам</b> — отсюда дюжины: гросс = <b>12 дюжин</b> = 144. Задача: 144·5 + 12·8 + 6 = <b>822</b>. Десятичная система победила из-за пяти пальцев на руке, а компьютеры считают по-двоично!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u5')">◀ Назад</button><button class="btn" onclick="showTask('u7')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 7 ЕГИПЕТ -->
+  <section class="task" id="u7">
+    <div class="card">
+      <span class="badge">𓂀 Стр. 7</span>
+      <h2 class="task-title">Первые цифры: тайна Египта</h2>
+      <div class="story">Долгое время и после того, как появились названия чисел, люди их <b>не записывали</b>. Причина была самая уважительная — они ещё <b>не умели писать</b>! Поэтому, если кому-нибудь надо было передать другому человеку сведения, в которых участвовали числа, прибегали к <b>зарубкам</b> на дереве или на кости, к <b>узелкам</b> на верёвках, <b>рисункам</b> на мягкой глине. Такие знаки удобно перекладывать с места на место, убирать одни и добавлять другие. Но всё же это ещё не была настоящая арифметика: знаки на глине обозначали не числа, а <b>предметы</b> — головы скота, мешки с зерном, кувшины масла. Их приходилось изображать столько же, сколько было предметов.</div>
+      <div class="story2">💡 С этим ещё можно было мириться, пока учёт вёлся в пределах одного хозяйства, одной деревни. Но когда возникли <b>государства</b>, старые методы обозначения чисел стали негодными: для записи больших чисел уже нельзя было обойтись ни зарубками на бирках, ни узелками, ни глиняными фигурками. И вот примерно <span class="em">5 тысяч лет тому назад</span> было сделано замечательное открытие: люди догадались, что можно обозначать знаком не одну голову скота, а сразу <b>10 или 100 голов</b>, не один мешок зерна, а сразу 6 или 60 мешков. Египтяне обозначали: единицу — вертикальной черточкой, десяток — дугой, сотню — знаком, похожим на спираль, тысячу — цветком лотоса, десять тысяч — поднятым пальцем.</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Чтобы написать какое-нибудь число, египетский писец бесхитростно писал столько раз знак тысяч, сколько в этом числе тысяч, затем столько раз, сколько в оставшейся части сотен, и так далее. Запись на таблице: 2 тысячи, 3 сотни, 6 десятков, 7 единиц = <b>2367</b>.</li>
+          <li>Писать много раз один и тот же знак, разумеется, весьма неудобно. Более экономной является <b>позиционная система</b> записи чисел: в ней имеет значение не только начертание цифры, но и её <b>позиция</b> — положение среди других цифр.</li>
+          <li>Египетские знаки-«иероглифы чисел» рисовали красивыми картинками: черта, дуга-петля, закрученная спираль, цветок лотоса и поднятый палец — целая азбука количества!</li>
+        </ul>
+      </div>
+      <div class="eglegend">
+        <div class="egitem"><span class="g">|</span>1</div>
+        <div class="egitem"><span class="g">∩</span>10</div>
+        <div class="egitem"><span class="g">➰</span>100</div>
+        <div class="egitem"><span class="g">🌸</span>1000</div>
+        <div class="egitem"><span class="g">☝️</span>10000</div>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Запиши число 2367</b> египетскими знаками: нужно 2 лотоса, 3 спирали, 6 дуг, 7 черт.</p>
+      <div class="build" id="u7-build" style="min-height:60px"></div>
+      <div class="chips" style="margin-top:10px">
+        <button class="chip g" id="u7-b1" onclick="egAdd('|')">|</button>
+        <button class="chip g" id="u7-b2" onclick="egAdd('∩')">∩</button>
+        <button class="chip g" id="u7-b3" onclick="egAdd('➰')">➰</button>
+        <button class="chip g" id="u7-b4" onclick="egAdd('🌸')">🌸</button>
+        <button class="chip" id="u7-clr" onclick="egClear()">✖ очистить</button>
+      </div>
+      <p class="task-text" style="margin-top:18px">🎮 <b>Часть 2. Расшифруй записи</b> египетского писца:</p>
+      <div class="egshow">🌸  🌸 🌸  ➰ ➰ ➰  ∩ ∩ | | | | | | | |</div>
+      <div class="line" id="u7-dec"><span>Это число:</span><input class="ans-in" id="u7-in" inputmode="numeric"></div>
+      <div class="egshow">☝️ 🌸 🌸  ➰ ➰  ∩ ∩ ∩</div>
+      <div class="line" id="u7-dec2"><span>А это число:</span><input class="ans-in" id="u7-in2" inputmode="numeric"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU7build()">Проверить запись</button>
+        <button class="btn" onclick="checkU7dec()">Проверить расшифровку</button>
+        <button class="btn pink" id="u7-verdict" onclick="showVerdict('u7')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU7()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u7-conc"><p class="conc-text">2367 = 2 лотоса, 3 спирали, 6 дуг, 7 черт. Расшифровки: <b>4528</b> и <b>12340</b> (палец = 10 000!). Повторять знак много раз неудобно — поэтому человечество изобрело позиционную запись.</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u6')">◀ Назад</button><button class="btn" onclick="showTask('u8')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 8 ПОЗИЦИЯ И НОЛЬ -->
+  <section class="task" id="u8">
+    <div class="card">
+      <span class="badge">0️⃣ Стр. 8</span>
+      <h2 class="task-title">Место цифры и великий ноль</h2>
+      <div class="story">Позиционной является современная система записи чисел, которую мы изучаем в школе: в числе 18 цифра 8 означает 8 единиц, в числе 82 — 8 десятков, или 80 единиц, а в числе 875 — 8 сотен, или 800 единиц. Первая позиционная система записи чисел появилась в <span class="em">Вавилоне</span>. Единица в ней обозначалась знаком, похожим на клинышек, а десяток — знаком «». Дальше вавилоняне поступали почти так же, как делаем сейчас мы: запись начинали с единиц высшего разряда. Запись означала: 3 единицы высшего разряда (то есть 3 раза по 60), а дальше шло обозначение числа 25. Поэтому на табличке записано число: 60·3 + 25 = <b>205</b>. Так что в основном разница между вавилонской и современной записью чисел была в одном: вместо числа 10 приняли за основу системы счисления число <span class="em">60</span>.</div>
+      <div class="story2">💡 Но было ещё одно отличие, делавшее вавилонскую систему записи не совсем удобной: вавилоняне долгое время <b>не знали нуля</b>! Из-за этого запись числа 205 можно было прочитать совсем по-другому. Представьте, что у нас нет нуля и мы не различаем запись чисел 47, 407, 470, 4007 и т. д. Вот и вавилонским писцам трудно было разбираться, какое именно число записано. Впервые нуль был придуман вавилонянами примерно <b>две тысячи лет тому назад</b>. Но они применяли его лишь для обозначения <b>пропущенных разрядов в середине</b> числа — писать нули в конце записи числа они не догадались. В <b>Индии примерно в IX веке</b> нуль был присоединён к девяти цифрам — и появилась возможность обозначать этими десятью цифрами <b>любое число</b>, как бы велико оно ни было.</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Немало различных способов записи чисел было создано людьми. На Древней Руси числа обозначали <b>буквами с особым знаком (титлом)</b>, который писали над буквой. Первые 9 букв алфавита обозначали единицы, следующие 9 букв — десятки, а последние 9 букв — сотни. Число 10 тысяч называли словом <b>«тьма»</b>.</li>
+          <li>И самое главное — запись таких гигантских чисел стала довольно короткой. Если бы живший 30 тысяч лет тому назад древний человек имел представление о миллионе и захотел изобразить это число с помощью зарубок, делая одну зарубку в минуту по 8 часов каждый день, ему потребовалось бы для этого <b>около 6 лет</b>. Теперь же вся запись умещается в одной строке!</li>
+          <li>Индийской системой обозначений мы пользуемся до сих пор: цифры много раз изменялись, переходя от народа к народу, пока приняли современную форму.</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Что означает цифра 8?</b> Выбери разряд. И разгадай загадки нуля и Вавилона.</p>
+      <div id="u8-set"></div>
+      <div class="line" id="u8-bab"><span>🏺 По-вавилонски: 2·60 + 15 =</span><input class="ans-in" id="u8-in" inputmode="numeric"></div>
+      <div class="line" id="u8-bab2"><span>🏺 Переведи в нашу систему: 1·60 + 45 =</span><input class="ans-in" id="u8-in2" inputmode="numeric"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU8()">Проверить Вавилон</button>
+        <button class="btn pink" id="u8-verdict" onclick="showVerdict('u8')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU8()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u8-conc"><p class="conc-text">Место цифры решает всё: 8 в 18 — это 8, в 82 — 80, в 875 — 800. Вавилон: 2·60+15 = <b>135</b>, 1·60+45 = <b>105</b>. Без нуля записи <b>47 и 407</b> не отличить — вот зачем придумали ноль!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u7')">◀ Назад</button><button class="btn" onclick="showTask('u9')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 9 БОЛЬШИЕ ЧИСЛА -->
+  <section class="task" id="u9">
+    <div class="card">
+      <span class="badge">💰 Стр. 9</span>
+      <h2 class="task-title">Тьма, миллион и бесконечность</h2>
+      <div class="story">Приведём названия некоторых больших чисел с указанием числа нулей после единицы: <b>тысяча</b> — 3 нуля (10³), <b>миллион</b> — 6 (10⁶), <b>миллиард (биллион)</b> — 9 (10⁹), <b>триллион</b> — 12 (10¹²), <b>квадриллион</b> — 15 (10¹⁵), <b>квинтиллион</b> — 18 (10¹⁸). Существует ли самое большое натуральное число? Долгое время люди давали положительный ответ: вначале самым большим числом было 2, затем 3, 4 и т. д. На Древней Руси о числе 10 000 говорили <span class="em">«тьма»</span>, то есть тёмное число, которое нельзя ясно представить. В Древней Греции считалось, что самым большим числом является число песчинок на Земле.</div>
+      <div class="story2">💡 Со временем людям пришлось полностью отказаться от мысли о самом большом натуральном числе. Ещё древнегреческий учёный <b>Архимед</b> в книге «Псаммит» («Счёт песчинок») доказал, что счёт можно продолжать <b>неограниченно</b>. Однако потребовались многие века для того, чтобы идея бесконечности натурального ряда чисел стала общедоступной. Что же таится за многоточием в записи 1, 2, 3…? Возьмём полоску и будем писать на ней 1, 2, 3, 4, 5… Даже если взять полоску длиной в 1 км, то, когда мы её всю испишем, процесс не окончится. Возьмём полоску побольше — равную расстоянию от Бреста до Владивостока: чтобы всю её заполнить числами, придётся несколько лет идти с запада на восток. Но всё равно за каждым написанным числом идёт следующее!</div>
+      <div class="facts"><span class="fh">📚 Ещё факты</span>
+        <ul>
+          <li>Не окончится наша работа и тогда, когда мы намотаем полоску, как клубок ниток, на земной шар сто, двести, миллион раз. Вот уже полоска обошла земной шар так много раз, что под ней оказались самые высокие горы, внутрь нашего фантастического шара попали орбиты далёких планет и даже самые далёкие от нас туманности. И сколько бы ни писали эти числа наши дети и внуки, <b>конца этому процессу никогда не будет</b>.</li>
+          <li>Цифры, которые мы используем, называют <b>арабскими</b>: арабы заимствовали у индийцев цифры и позиционную десятичную систему записи чисел, а европейцы узнали её от арабов. Поэтому цифры, которые мы используем, в отличие от римских, стали называться арабскими. Они употребляются в нашей стране начиная примерно с <b>XVII века</b>.</li>
+          <li>Вот что значит такая простая запись: <b>1, 2, 3, …</b> — за ней стоит бесконечность!</li>
+        </ul>
+      </div>
+      <p class="task-text">🎮 <b>Часть 1. Сколько нулей?</b> Выбери для каждого имени.</p>
+      <div id="u9-set"></div>
+      <div class="line" id="u9-tma"><span>На Древней Руси «тьма» — это</span><input class="ans-in" id="u9-in" inputmode="numeric"></div>
+      <div class="line" id="u9-mil"><span>✍️ Запиши цифрами миллион:</span><input class="ans-in" id="u9-in2" inputmode="numeric" style="width:190px"></div>
+      <div class="controls">
+        <button class="btn" onclick="checkU9()">Проверить</button>
+        <button class="btn pink" id="u9-verdict" onclick="showVerdict('u9')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU9()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u9-conc"><p class="conc-text">Тысяча — 3 нуля, миллион — 6 (<b>1 000 000</b>), миллиард — 9, триллион — 12. «Тьма» = <b>10 000</b>. А самого большого натурального числа <b>нет</b>: 1, 2, 3, … — бесконечность, как доказал Архимед!</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u8')">◀ Назад</button><button class="btn" onclick="showTask('u10')">Дальше ▶</button></div>
+  </section>
+
+  <!-- 10 ВИКТОРИНА -->
+  <section class="task" id="u10">
+    <div class="card">
+      <span class="badge">🏆 Викторина</span>
+      <h2 class="task-title">Проверь себя по всему уроку</h2>
+      <p class="task-text">Выбери один правильный ответ в каждом вопросе (их теперь 15!).</p>
+      <div id="u10-quiz"></div>
+      <div class="controls">
+        <button class="btn pink" id="u10-verdict" onclick="showVerdict('u10')" disabled>💡 Вывод</button>
+        <button class="btn gray" onclick="resetU10()">🔄 Заново</button>
+      </div>
+      <div class="conclusion" id="u10-conc"><p class="conc-text">Все 15 ответов верны! Ты прошёл весь путь счёта: <b>зарубки → имена чисел → действия → системы счисления → цифры и ноль → арабские цифры → бесконечность</b>.</p></div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u9')">◀ Назад</button><button class="btn pink" onclick="showTask('u11')">🏁 Итог ▶</button></div>
+  </section>
+
+  <!-- ИТОГ -->
+  <section class="task" id="u11">
+    <div class="card">
+      <span class="badge">🏁 Итог урока</span>
+      <h2 class="task-title">Что мы узнали</h2>
+      <ul style="font-size:clamp(16px,2.4vw,19px);font-weight:800;padding-left:26px;color:#16304f;line-height:1.65">
+        <li>Счёт родился из нужды: посевы, полив, стадо, амбары; считали <b>по одному предмету на другой</b> (зарубки, узелки, глиняные фигурки).</li>
+        <li>Действия родились из дел: сложили добычу, съели часть орехов, урожай «сам-двадцать», мясо поровну; «два плюс два — четыре» открыли не сразу!</li>
+        <li>Имена чисел: сначала «один, два, много» («один» — солнце, «два» — парные предметы); папуасы собирали числа из слов.</li>
+        <li>Священные 3 и 7; граница «много» в языке: четыре лошади — но пять лошадей; «тридевять» = 27.</li>
+        <li>Системы счисления: пятеричная, десятичная (пальцы; «пять пальцев третьего человека» → «пятьсот»), двадцатеричная (пятки), двенадцатеричная (суставы, дюжина, гросс), двоичная (компьютеры).</li>
+        <li>Первые цифры: зарубки и рисунки предметов → египетские знаки (1, 10, 100, 1000, 10000) → позиционная запись (Вавилон, основа 60).</li>
+        <li>Ноль: Вавилон ~2000 лет назад (для пропущенных разрядов), Индия IX век — ноль + 9 цифр = любое число; на Руси числа-буквы с титлом, тьма = 10 000.</li>
+        <li>Цифры — «арабские», но придуманы в Индии; в нашей стране с XVII века.</li>
+        <li>Большие числа: тысяча…квинтиллион; натуральный ряд <b>бесконечен</b> (Архимед, «Псаммит»).</li>
+      </ul>
+      <div class="final" id="final6">
+        <svg width="100" height="100" viewBox="0 0 120 120">
+          <polygon points="60,6 74,44 114,44 82,68 94,108 60,84 26,108 38,68 6,44 46,44" fill="#ffd23f" stroke="#0f1e33" stroke-width="5" stroke-linejoin="round"/>
+          <circle cx="48" cy="52" r="4.5" fill="#0f1e33"/><circle cx="72" cy="52" r="4.5" fill="#0f1e33"/>
+          <path d="M46 66 q14 14 28 0" stroke="#0f1e33" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <h3>Урок пройден!</h3>
+        <p style="font-size:20px;font-weight:800;margin:0" id="final6-text">Собери все 10 звёзд — и ты знаток истории счёта! 🌟</p>
+      </div>
+    </div>
+    <div class="nav-bottom"><button class="btn gray" onclick="showTask('u10')">◀ Назад</button><button class="btn" onclick="showTask('u1')">🔁 Сначала</button></div>
+  </section>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+let actx=null;
+const AC=()=>{if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==='suspended')actx.resume();return actx};
+function beep(f=600,d=.12,type='sine',v=.17,delay=0){const c=AC();if(!c)return;try{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(c.destination);const t=c.currentTime+delay;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.06)}catch(e){}}
+const sClick=()=>beep(620,.06,'triangle',.1);
+const sGood=()=>{beep(523,.15,'triangle',.16);beep(659,.15,'triangle',.16,.13);beep(784,.3,'triangle',.16,.26)};
+const sBad=()=>{beep(200,.2,'sawtooth',.08);beep(160,.25,'sawtooth',.08,.15)};
+const sWin=()=>{[523,659,784,1047,784,1047].forEach((f,i)=>beep(f,.22,'triangle',.18,i*.14))};
+let tTimer;
+function toast(msg,kind=''){const t=$('#toast');t.innerHTML=msg;t.className='show '+kind;clearTimeout(tTimer);tTimer=setTimeout(()=>t.className='',4200)}
+function confetti(n=120){const cols=['#ff595e','#ffca3a','#8ac926','#1982c4','#6a4c93','#ffffff','#ffb703','#66d97f'];const w=document.createElement('div');w.className='confetti-wrap';document.body.appendChild(w);for(let i=0;i<n;i++){const c=document.createElement('i');const s=8+Math.random()*11;c.style.left=Math.random()*100+'vw';c.style.width=s+'px';c.style.height=(s*(.5+Math.random()))+'px';c.style.background=cols[Math.floor(Math.random()*cols.length)];c.style.borderRadius=Math.random()>.5?'50%':'2px';c.style.animationDuration=(2.4+Math.random()*2.6)+'s';c.style.animationDelay=(Math.random()*1.4)+'s';w.appendChild(c)}setTimeout(()=>w.remove(),6500)}
+const TASKS=[{id:'u1',label:'1 · Пастух'},{id:'u2',label:'2 · Имена'},{id:'u3',label:'3 · Три и 7'},{id:'u4',label:'4 · Пальцы'},{id:'u5',label:'5 · Действия'},{id:'u6',label:'6 · Системы'},{id:'u7',label:'7 · Египет'},{id:'u8',label:'8 · Ноль'},{id:'u9',label:'9 · Большие'},{id:'u10',label:'10 · Викторина'}];
+const done={};
+function buildTabs(){$('#tabs').innerHTML=TASKS.map((t,i)=>`<button class="tab${i===0?' active':''}" data-tab="${t.id}" onclick="showTask('${t.id}')">${t.label} <span class="ok"></span></button>`).join('')+`<button class="tab" data-tab="u11" onclick="showTask('u11')">🏁 Итог</button>`}
+function showTask(id){$$('.task').forEach(s=>s.classList.remove('active'));$('#'+id).classList.add('active');$$('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'});sClick()}
+function markDone(id){if(done[id])return;done[id]=true;const tab=$(`.tab[data-tab="${id}"]`);if(tab){tab.classList.add('done');tab.querySelector('.ok').textContent='✔'}
+  const n=Object.keys(done).length;$('#pbar').style.width=(n/TASKS.length*100)+'%';$('#ptext').textContent=`⭐ Получено звёзд: ${n} из ${TASKS.length}`;
+  if(n===TASKS.length){$('#final6-text').innerHTML='Все 10 звёзд собраны! Ты — <b style="color:#ffd23f">знаток истории счёта</b>! 🏆';confetti(180);sWin()}}
+function enableVerdict(id){const b=$('#'+id+'-verdict');if(b){b.disabled=false;b.classList.add('pulse')}}
+function resetVerdict(id){const b=$('#'+id+'-verdict');if(b){b.disabled=true;b.classList.remove('pulse');b.textContent='💡 Вывод'}const c=$('#'+id+'-conc');if(c)c.classList.remove('show')}
+function showVerdict(id){const b=$('#'+id+'-verdict');if(b.disabled){sBad();b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),480);toast('🎮 Сначала выполни задание!','err');return}
+  $('#'+id+'-conc').classList.add('show');b.textContent='✅ Вывод показан';b.disabled=true;b.classList.remove('pulse');sWin();confetti(60);
+  setTimeout(()=>$('#'+id+'-conc').scrollIntoView({behavior:'smooth',block:'center'}),200)}
+function choiceRender(el,data,solved,pick,sym){
+  el.innerHTML=data.map((d,i)=>`<div class="qblock ${solved[i]?'solved':''}"><div class="qtitle">${d.q}</div><div class="qopts ${sym?'sym':''}">${d.o.map((o,j)=>`<button class="qopt ${solved[i]&&j===d.a?'correct':''}" ${solved[i]?'disabled':''} data-i="${i}" data-j="${j}">${o}</button>`).join('')}</div></div>`).join('');
+  el.querySelectorAll('.qopt').forEach(b=>b.addEventListener('click',()=>pick(+b.dataset.i,+b.dataset.j,b)));
+}
+function choicePick(solved,data,i,j,btn,render,done){
+  if(solved[i])return;
+  if(j===data[i].a){solved[i]=true;sGood();render();if(solved.every(Boolean))done();}
+  else{btn.classList.add('wrong');sBad();setTimeout(()=>btn.classList.remove('wrong'),500);toast('🤔 Подумай ещё! Ответ спрятан в рассказе выше.','err')}
+}
+function winDone(id,msg){markDone(id);enableVerdict(id);confetti(70);toast('🎉 '+msg,'ok')}
+
+/* U1 */
+let sheep=new Set();
+function renderU1(){
+  $('#u1-flock').innerHTML=Array.from({length:7},(_,i)=>`<button class="sheep ${sheep.has(i)?'counted':''}" data-i="${i}">🐑</button>`).join('');
+  $$('#u1-flock .sheep').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;sheep.has(i)?sheep.delete(i):sheep.add(i);sClick();renderU1()});
+  $('#u1-notches').innerHTML=sheep.size?Array.from({length:sheep.size},()=>`<span class="notch"></span>`).join(''):'<span class="nh">Здесь появятся зарубки…</span>';
+}
+function checkU1(){
+  const r1=$('#u1-row'),r2=$('#u1-row2'),v1=parseInt($('#u1-in').value.replace(/\s+/g,''),10),v2=parseInt($('#u1-in2').value.replace(/\s+/g,''),10);
+  r1.classList.remove('row-ok','row-bad');r2.classList.remove('row-ok','row-bad');
+  if(sheep.size<7){sBad();r1.classList.add('row-bad');toast('🐑 Сначала посчитай всех овец: нажми на каждую!','err');return}
+  let ok=true;
+  if(v1===7)r1.classList.add('row-ok');else{r1.classList.add('row-bad');ok=false}
+  if(v2===7)r2.classList.add('row-ok');else{r2.classList.add('row-bad');ok=false}
+  if(ok){[$('#u1-in'),$('#u1-in2')].forEach(i=>i.disabled=true);winDone('u1','Пастух доволен: всё стадо дома!')}
+  else{sBad();toast('🤔 Подсказка: зарубок столько же, сколько овец; вернулось = 12 − 5.','err')}
+}
+function resetU1(){sheep=new Set();['#u1-in','#u1-in2'].forEach(s=>{const i=$(s);i.value='';i.disabled=false});$('#u1-row').classList.remove('row-ok','row-bad');$('#u1-row2').classList.remove('row-ok','row-bad');resetVerdict('u1');renderU1();sClick()}
+/* U2 */
+const SEQ=[{n:3,seq:['окоза','урапун']},{n:4,seq:['окоза','окоза']},{n:6,seq:['окоза','окоза','окоза']},{n:7,seq:['окоза','окоза','окоза','урапун']},{n:8,seq:['окоза','окоза','окоза','окоза']},{n:9,seq:['окоза','окоза','окоза','окоза','урапун']}];
+let builds,locked2;
+function resetU2(){builds=SEQ.map(()=>[]);locked2=SEQ.map(()=>false);resetVerdict('u2');renderU2();sClick()}
+function renderU2(){
+  $('#u2-rows').innerHTML=SEQ.map((s,i)=>`<div class="buildrow" id="u2-row-${i}">
+    <span class="tgt">Число ${s.n}:</span>
+    <div class="build ${locked2[i]?'locked':''}">${builds[i].map(w=>`<span class="bchip">${w}</span>`).join('')||'<span style="font-weight:800;color:#93a2b8;font-size:15px">сюда складывай слова</span>'}</div>
+    <div class="chips">
+      <button class="chip" ${locked2[i]?'disabled':''} onclick="addWord(${i},'урапун')">урапун</button>
+      <button class="chip" ${locked2[i]?'disabled':''} onclick="addWord(${i},'окоза')">окоза</button>
+      <button class="chip" ${locked2[i]?'disabled':''} onclick="clearRow(${i})">✖</button>
+    </div></div>`).join('');
+}
+function addWord(i,w){if(locked2[i])return;builds[i].push(w);sClick();renderU2();
+  const seq=SEQ[i].seq;
+  if(builds[i].length===seq.length){
+    if(builds[i].join('-')===seq.join('-')){locked2[i]=true;sGood();renderU2();
+      if(locked2.every(Boolean))winDone('u2','Даже 7, 8 и 9 собраны по правилу папуасов!');
+      else toast('✅ Верно! Собери следующее число.','ok')}
+    else{const r=$('#u2-row-'+i);r.classList.add('shake');sBad();toast('🤔 Не тот порядок. 2 — «окоза», 1 — «урапун». Складывай двойки, потом единицу.','err');setTimeout(()=>{builds[i]=[];renderU2()},500)}}
+}
+function clearRow(i){if(locked2[i])return;builds[i]=[];sClick();renderU2()}
+/* U3 */
+const A3=[7,7,7,3,3,3];
+const GRD=[{q:'Три …',o:['лошадь','лошади','лошадей'],a:1},{q:'Пять …',o:['лошадь','лошади','лошадей'],a:2},{q:'Две …',o:['лошадь','лошади','лошадей'],a:1},{q:'Четыре …',o:['лошадь','лошади','лошадей'],a:1}];
+let grS,provOk=false;
+function resetU3(){grS=GRD.map(()=>false);provOk=false;$$('[data-row^="u3-"]').forEach(r=>{r.classList.remove('row-ok','row-bad');r.querySelectorAll('.ans-in').forEach(i=>{i.disabled=false;i.value=''})});resetVerdict('u3');renderU3();sClick()}
+function renderU3(){choiceRender($('#u3-gram'),GRD,grS,(i,j,b)=>choicePick(grS,GRD,i,j,b,renderU3,maybeU3),false)}
+function checkU3(){
+  const rows=$$('[data-row^="u3-"]');let k=0,ok=true;
+  rows.forEach(row=>{row.classList.remove('row-ok','row-bad');
+    row.querySelectorAll('.ans-in').forEach(inp=>{const v=parseInt(inp.value.replace(/\s+/g,''),10);if(v===A3[k])row.classList.add('row-ok');else{row.classList.add('row-bad');ok=false}k++})});
+  if(ok){rows.forEach(r=>r.querySelectorAll('.ans-in').forEach(i=>i.disabled=true));provOk=true;sGood();maybeU3()}
+  else{sBad();toast('🤔 Пословицы про «много» — с числом 7, сказки — с числом 3.','err')}
+}
+function maybeU3(){if(provOk&&grS.every(Boolean))winDone('u3','Пословицы и граница «много» разгаданы!')}
+/* U4 */
+let papers=new Set(),q10S=[false];
+const Q10D=[{q:'Как папуасы называли число 10?',o:['«две руки»','«окоза»','«много»'],a:0}];
+function resetU4(){papers=new Set();q10S=[false];$$('[data-row^="u4-"]').forEach(r=>{r.classList.remove('row-ok','row-bad');const i=r.querySelector('.ans-in');i.disabled=false;i.value=''});resetVerdict('u4');renderU4();sClick()}
+function renderU4(){
+  $('#u4-papers').innerHTML=Array.from({length:12},(_,i)=>`<button class="ppc ${papers.has(i)?'counted':''}" data-i="${i}">📄</button>`).join('');
+  $$('#u4-papers .ppc').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;papers.has(i)?papers.delete(i):papers.add(i);sClick();renderU4()});
+  const c=papers.size,bent=c%10,tens=Math.floor(c/10);
+  let h='';for(let q=0;q<2;q++){let f='';for(let j=0;j<5;j++){f+=`<div class="fing ${q*5+j<bent?'bent':''}"></div>`}h+=`<div><div class="hand">${f}</div><div class="handlbl">рука ${q+1}</div></div>`}
+  $('#u4-hands').innerHTML=h+`<div style="font-weight:900;color:#7a6a3a;font-size:16px">десятков: ${tens}</div>`;
+  $('#u4-tally').textContent=c===0?'Посчитано: 0':c<10?`Посчитано: ${c} — загнуты ${c} пальцев`:c===10?'Посчитано: 10 — папуасы сказали бы «ДВЕ РУКИ»!':`Посчитано: ${c} — «две руки» и ещё ${c-10} пальца (1 десяток и ${c-10})`;
+  choiceRender($('#u4-q10'),Q10D,q10S,(i,j,b)=>choicePick(q10S,Q10D,i,j,b,()=>renderU4(),()=>{}),false);
+}
+function checkU4(){
+  const rows=$$('[data-row^="u4-"]'),ans=[5,10,13,3];let ok=true;
+  if(papers.size<12){sBad();toast('📄 Сначала посчитай все 12 кусочков бумаги!','err');return}
+  rows.forEach((row,i)=>{row.classList.remove('row-ok','row-bad');const inp=row.querySelector('.ans-in');const v=parseInt(inp.value.replace(/\s+/g,''),10);if(v===ans[i])row.classList.add('row-ok');else{row.classList.add('row-bad');ok=false}});
+  if(ok&&q10S[0]){rows.forEach(r=>r.querySelector('.ans-in').disabled=true);winDone('u4','Пальцы-машина освоена!')}
+  else if(ok&&!q10S[0]){sBad();toast('🤔 Остался вопрос про название числа 10 у папуасов.','err')}
+  else{sBad();toast('🤔 Посмотри на руки сверху и вспомни рассказ про папуасов.','err')}
+}
+/* U5 */
+const OPD=[
+ {q:'Несколько групп рыбаков и сборщиков кореньев складывают добычу в одно место…',o:['+','−','·',':'],a:0},
+ {q:'Часть собранных орехов съели — запас уменьшился…',o:['+','−','·',':'],a:1},
+ {q:'Урожай собрали в несколько раз больше, чем посеяли семян («сам-двадцать»)…',o:['+','−','·',':'],a:2},
+ {q:'Добытое на охоте мясо делят поровну между всеми членами племени…',o:['+','−','·',':'],a:3}];
+let opS,opPick=[null,null],opOk=[false,false];
+const OPR=[{op:0,ans:13},{op:2,ans:40}];
+function resetU5(){opS=OPD.map(()=>false);opPick=[null,null];opOk=[false,false];
+  [0,1].forEach(k=>{const i=$('#u5-a'+k);i.value='';i.disabled=false;$('#u5-p'+k).classList.remove('solved')});
+  resetVerdict('u5');renderU5();sClick()}
+function renderU5(){
+  choiceRender($('#u5-set'),OPD,opS,(i,j,b)=>choicePick(opS,OPD,i,j,b,renderU5,maybeU5),true);
+  [0,1].forEach(k=>{
+    const box=$('#u5-op'+k);
+    box.innerHTML=['+','−','·',':'].map((s,j)=>`<button class="qopt" style="${opPick[k]===j?'border-color:#b07908;background:linear-gradient(180deg,#ffd23f,#ffb703);color:#4a3200':''}" data-j="${j}">${s}</button>`).join('');
+    box.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(opOk[k])return;opPick[k]=+b.dataset.j;sClick();renderU5()});
+  });
+}
+function checkU5(){
+  let ok=true;
+  [0,1].forEach(k=>{
+    const inp=$('#u5-a'+k),v=parseInt(inp.value.replace(/\s+/g,''),10);
+    if(opPick[k]===OPR[k].op&&v===OPR[k].ans){opOk[k]=true;inp.disabled=true;$('#u5-p'+k).classList.add('solved')}
+    else ok=false;
+  });
+  if(ok&&opS.every(Boolean)){winDone('u5','Все четыре действия угаданы и задачи решены!')}
+  else if(ok){sGood();toast('✅ Задачи верны! Осталось угадать действия в части 1.','ok')}
+  else{sBad();toast('🤔 Проверь: куча = 7 + 6; «сам-пять» = 8 · 5.','err')}
+}
+function maybeU5(){if(opS.every(Boolean)&&opOk[0]&&opOk[1])winDone('u5','Все четыре действия угаданы и задачи решены!')}
+/* U6 */
+const SYSD=[
+ {q:'Десятичная система (наша)',o:['2','5','10','12','20'],a:2},
+ {q:'Пятеричная (пальцы одной руки)',o:['2','5','10','12','20'],a:1},
+ {q:'Двадцатеричная (пальцы рук и ног)',o:['2','5','10','12','20'],a:4},
+ {q:'Двенадцатеричная (суставы пальцев, дюжина)',o:['2','5','10','12','20'],a:3},
+ {q:'Двоичная (современные компьютеры)',o:['2','5','10','12','20'],a:0}];
+let sysS,grossOk=false,dozOk=false,joints=new Set();
+function resetU6(){sysS=SYSD.map(()=>false);grossOk=false;dozOk=false;joints=new Set();
+  ['#u6-in','#u6-in2'].forEach(s=>{const i=$(s);i.value='';i.disabled=false});
+  $('#u6-gross').classList.remove('row-ok','row-bad');$('#u6-doz').classList.remove('row-ok','row-bad');
+  resetVerdict('u6');renderU6();sClick()}
+function renderU6(){
+  let h='<div class="jhand">';
+  for(let f=0;f<4;f++){h+='<div class="jfing">';for(let j=0;j<3;j++){const id=f*3+j;h+=`<button class="joint ${joints.has(id)?'on':''}" data-id="${id}"></button>`}h+='</div>'}
+  h+='<div class="thumbj">боль-<br>шой</div></div><div class="jcap">4 пальца × 3 сустава = 12 — так считали шумеры!</div>';
+  $('#u6-joints').innerHTML=h;
+  $$('#u6-joints .joint').forEach(b=>b.onclick=()=>{const id=+b.dataset.id;joints.has(id)?joints.delete(id):joints.add(id);sClick();renderU6();
+    if(joints.size===12)toast('👏 Дюжина! Ровно 12 суставов — вот откуда двенадцатеричная система.','ok')});
+  $('#u6-jtally').textContent=`Суставов посчитано: ${joints.size} из 12`;
+  choiceRender($('#u6-set'),SYSD,sysS,(i,j,b)=>choicePick(sysS,SYSD,i,j,b,renderU6,maybeU6),false);
+}
+function checkU6(){
+  const r1=$('#u6-gross'),r2=$('#u6-doz');
+  const v1=parseInt($('#u6-in').value.replace(/\s+/g,''),10),v2=parseInt($('#u6-in2').value.replace(/\s+/g,''),10);
+  r1.classList.remove('row-ok','row-bad');r2.classList.remove('row-ok','row-bad');
+  let ok=true;
+  if(v1===822){r1.classList.add('row-ok');$('#u6-in').disabled=true;grossOk=true}else{r1.classList.add('row-bad');ok=false}
+  if(v2===12){r2.classList.add('row-ok');$('#u6-in2').disabled=true;dozOk=true}else{r2.classList.add('row-bad');ok=false}
+  if(ok&&sysS.every(Boolean))winDone('u6','Системы счисления и дюжины разгаданы!');
+  else if(ok){sGood();toast('✅ Числа верны! Осталось выбрать основы систем.','ok')}
+  else{sBad();toast('🤔 Подсказки: гросс = 144 = 12·12; 144·5 + 12·8 + 6 = ?','err')}
+}
+function maybeU6(){if(sysS.every(Boolean)&&grossOk&&dozOk)winDone('u6','Системы счисления и дюжины разгаданы!')}
+/* U7 */
+let eg=[],egLock=false,decOk=false,dec2Ok=false;
+const EGT={'|':7,'∩':6,'➰':3,'🌸':2};
+function egRender(){
+  const b=$('#u7-build');
+  b.innerHTML=eg.length?eg.map(g=>`<span class="bchip g">${g}</span>`).join(''):'<span style="font-weight:800;color:#93a2b8;font-size:15px">знаки появятся здесь</span>';
+  b.classList.toggle('locked',egLock);
+  ['u7-b1','u7-b2','u7-b3','u7-b4','u7-clr'].forEach(id=>$('#'+id).disabled=egLock);
+}
+function egAdd(g){if(egLock)return;eg.push(g);sClick();egRender()}
+function egClear(){if(egLock)return;eg=[];sClick();egRender()}
+function checkU7build(){
+  if(egLock)return;
+  const cnt={};eg.forEach(g=>cnt[g]=(cnt[g]||0)+1);
+  const ok=Object.keys(EGT).every(k=>(cnt[k]||0)===EGT[k])&&eg.length===18;
+  if(ok){egLock=true;egRender();sGood();maybeU7();toast('✅ Верно! 2367 записано по-египетски.','ok')}
+  else{const b=$('#u7-build');b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),500);sBad();
+    toast('🤔 Нужно: 2 лотоса (1000), 3 спирали (100), 6 дуг (10), 7 черт (1).','err')}
+}
+function checkU7dec(){
+  const r1=$('#u7-dec'),r2=$('#u7-dec2');
+  const v1=parseInt($('#u7-in').value.replace(/\s+/g,''),10),v2=parseInt($('#u7-in2').value.replace(/\s+/g,''),10);
+  r1.classList.remove('row-ok','row-bad');r2.classList.remove('row-ok','row-bad');
+  let ok=true;
+  if(v1===4528){r1.classList.add('row-ok');$('#u7-in').disabled=true;decOk=true}else{r1.classList.add('row-bad');ok=false}
+  if(v2===12340){r2.classList.add('row-ok');$('#u7-in2').disabled=true;dec2Ok=true}else{r2.classList.add('row-bad');ok=false}
+  if(ok){sGood();maybeU7()}else{sBad();toast('🤔 Лотос=1000, спираль=100, дуга=10, черта=1, палец=10000.','err')}
+}
+function maybeU7(){if(egLock&&decOk&&dec2Ok)winDone('u7','Египетская письменность покорена!')}
+function resetU7(){eg=[];egLock=false;decOk=false;dec2Ok=false;['#u7-in','#u7-in2'].forEach(s=>{const i=$(s);i.value='';i.disabled=false});$('#u7-dec').classList.remove('row-ok','row-bad');$('#u7-dec2').classList.remove('row-ok','row-bad');resetVerdict('u7');egRender();sClick()}
+/* U8 */
+const POSD=[
+ {q:'В числе 18 цифра 8 означает…',o:['единицы','десятки','сотни'],a:0},
+ {q:'В числе 82 цифра 8 означает…',o:['единицы','десятки','сотни'],a:1},
+ {q:'В числе 875 цифра 8 означает…',o:['единицы','десятки','сотни'],a:2},
+ {q:'Зачем вавилонянам понадобился ноль?',o:['обозначать пропущенные разряды числа','украшать запись','считать пальцы ног'],a:0},
+ {q:'Без нуля одинаково выглядят записи чисел…',o:['47 и 407','12 и 21','5 и 55'],a:0}];
+let posS,babOk=false,bab2Ok=false;
+function resetU8(){posS=POSD.map(()=>false);babOk=false;bab2Ok=false;['#u8-in','#u8-in2'].forEach(s=>{const i=$(s);i.value='';i.disabled=false});$('#u8-bab').classList.remove('row-ok','row-bad');$('#u8-bab2').classList.remove('row-ok','row-bad');resetVerdict('u8');renderU8();sClick()}
+function renderU8(){choiceRender($('#u8-set'),POSD,posS,(i,j,b)=>choicePick(posS,POSD,i,j,b,renderU8,maybeU8),false)}
+function checkU8(){
+  const r1=$('#u8-bab'),r2=$('#u8-bab2');
+  const v1=parseInt($('#u8-in').value.replace(/\s+/g,''),10),v2=parseInt($('#u8-in2').value.replace(/\s+/g,''),10);
+  r1.classList.remove('row-ok','row-bad');r2.classList.remove('row-ok','row-bad');
+  let ok=true;
+  if(v1===135){r1.classList.add('row-ok');$('#u8-in').disabled=true;babOk=true}else{r1.classList.add('row-bad');ok=false}
+  if(v2===105){r2.classList.add('row-ok');$('#u8-in2').disabled=true;bab2Ok=true}else{r2.classList.add('row-bad');ok=false}
+  if(ok&&posS.every(Boolean))winDone('u8','Позиция цифры и ноль разгаданы!');
+  else if(ok){sGood();toast('✅ Вавилон посчитан! Осталось выбрать разряды и разгадать ноль.','ok')}
+  else{sBad();toast('🤔 2·60+15 = 120+15; 1·60+45 = 60+45.','err')}
+}
+function maybeU8(){if(posS.every(Boolean)&&babOk&&bab2Ok)winDone('u8','Позиция цифры и ноль разгаданы!')}
+/* U9 */
+const BIGD=[
+ {q:'Тысяча — сколько нулей?',o:['3','6','9','12'],a:0},
+ {q:'Миллион — сколько нулей?',o:['3','6','9','12'],a:1},
+ {q:'Миллиард — сколько нулей?',o:['3','6','9','12'],a:2},
+ {q:'Триллион — сколько нулей?',o:['3','6','9','12'],a:3},
+ {q:'Существует ли самое большое натуральное число?',o:['да — миллион','нет, ряд бесконечен','да — тьма'],a:1},
+ {q:'Сколько лет понадобилось бы, чтобы записать миллион зарубками (по 8 часов в день)?',o:['около 6 лет','1 день','100 лет'],a:0}];
+let bigS,tmaOk=false,milOk=false;
+function resetU9(){bigS=BIGD.map(()=>false);tmaOk=false;milOk=false;['#u9-in','#u9-in2'].forEach(s=>{const i=$(s);i.value='';i.disabled=false});$('#u9-tma').classList.remove('row-ok','row-bad');$('#u9-mil').classList.remove('row-ok','row-bad');resetVerdict('u9');renderU9();sClick()}
+function renderU9(){choiceRender($('#u9-set'),BIGD,bigS,(i,j,b)=>choicePick(bigS,BIGD,i,j,b,renderU9,maybeU9),false)}
+function checkU9(){
+  const r1=$('#u9-tma'),r2=$('#u9-mil');
+  const v1=parseInt($('#u9-in').value.replace(/\s+/g,''),10),v2=parseInt($('#u9-in2').value.replace(/\s+/g,''),10);
+  r1.classList.remove('row-ok','row-bad');r2.classList.remove('row-ok','row-bad');
+  let ok=true;
+  if(v1===10000){r1.classList.add('row-ok');$('#u9-in').disabled=true;tmaOk=true}else{r1.classList.add('row-bad');ok=false}
+  if(v2===1000000){r2.classList.add('row-ok');$('#u9-in2').disabled=true;milOk=true}else{r2.classList.add('row-bad');ok=false}
+  if(ok&&bigS.every(Boolean))winDone('u9','Большие числа и бесконечность покорены!');
+  else if(ok){sGood();toast('✅ Числа записаны! Осталось выбрать количество нулей.','ok')}
+  else{sBad();toast('🤔 Тьма = 10 000; миллион = 1 и шесть нулей.','err')}
+}
+function maybeU9(){if(bigS.every(Boolean)&&tmaOk&&milOk)winDone('u9','Большие числа и бесконечность покорены!')}
+/* U10 викторина — 15 вопросов */
+const QUIZ=[
+ {q:'Как пастух проверял, что всё стадо вернулось?',o:['По одному предмету на каждую овцу','Считал овец на глазах','Взвешивал стадо'],a:0},
+ {q:'Какие числа получили имена самыми первыми?',o:['Три и четыре','Один и два','Десять и сто'],a:1},
+ {q:'Как папуасы называли число 4?',o:['урапун-урапун','окоза-урапун','окоза-окоза'],a:2},
+ {q:'У какого народа счёт зависел от формы предмета («два глаза», «два камня»)?',o:['у нивхов','у папуасов','у шумеров'],a:0},
+ {q:'Из какого действия родилось деление?',o:['из равного раздела мяса','из складывания добычи','из счёта пальцев'],a:0},
+ {q:'Что означало выражение «сам-двадцать»?',o:['урожай в 20 раз больше посева','20 мешков зерна','двадцать овец в стаде'],a:0},
+ {q:'Как люди сначала произносили число 586?',o:['«пять пальцев третьего человека, восемь пальцев второго и шесть пальцев первого»','«пятьсот восемьдесят шесть»','«пять гроссов восемь дюжин»'],a:0},
+ {q:'По чему шумеры насчитывали 12?',o:['по суставам пальцев','по пальцам ног','по зарубкам'],a:0},
+ {q:'Гросс — это сколько предметов?',o:['144','12','100'],a:0},
+ {q:'Какая система счисления используется в современных компьютерах?',o:['двоичная','десятичная','двенадцатеричная'],a:0},
+ {q:'Какой знак обозначал 10 000 у египтян?',o:['палец','лотос','спираль'],a:0},
+ {q:'Какая основа была у вавилонской позиционной системы?',o:['60','10','20'],a:0},
+ {q:'Что заимствовали арабы у индийцев?',o:['цифры и позиционную десятичную систему','римские цифры','счёты'],a:0},
+ {q:'Где в IX веке ноль присоединили к девяти цифрам?',o:['в Индии','в Египте','на Руси'],a:0},
+ {q:'Как на Древней Руси называли число 10 000?',o:['тьма','миллион','дюжина'],a:0}];
+let qS;
+function resetU10(){qS=QUIZ.map(()=>false);resetVerdict('u10');renderU10();sClick()}
+function renderU10(){choiceRender($('#u10-quiz'),QUIZ,qS,(i,j,b)=>choicePick(qS,QUIZ,i,j,b,renderU10,()=>winDone('u10','Все 15 вопросов викторины верны!')),false)}
+/* старт */
+buildTabs();renderU1();resetU2();resetU3();renderU4();resetU5();resetU6();resetU7();resetU8();resetU9();resetU10();
+document.addEventListener('pointerdown',()=>AC(),{once:true});
+</script>
+</body>
+</html>
